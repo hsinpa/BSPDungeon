@@ -102,7 +102,6 @@ namespace DataStructure {
 
 				//Ready to move backward
 				if (corridors.Count > 0 && parent != null) {
-					Debug.Log("Backward");
 					parent.GenerateCorridor();	
 				}
 
@@ -120,12 +119,9 @@ namespace DataStructure {
 											Mathf.FloorToInt(Random.Range (lroom.y + 1, lroom.yMax - 1)));
 			Vector2 rpoint = new Vector2 (Mathf.FloorToInt(Random.Range (rroom.x + 1, rroom.xMax - 1)),
 											 Mathf.FloorToInt(Random.Range (rroom.y + 1, rroom.yMax - 1)));
-			
 
+            //Debug.Log("lPoint " + lpoint +", rPoint " + rpoint);
 			// always be sure that left point is on the left to simplify the code
-			//保證 lpoint 一定是地圖位子上 屬於左邊的房間
-			//如果不是 就將兩個房間倒轉過來
-			//這樣可以減少 等下生成走廊的程式碼行數
 			if (lpoint.x > rpoint.x) {
 				Vector2 temp = lpoint;
 				lpoint = rpoint;
@@ -140,7 +136,6 @@ namespace DataStructure {
 			if (w != 0) {
 				// choose at random to go horizontal then vertical or the opposite
 				if (Random.Range (0, 1) > 2) {
-					//先將走廊 往右邊延長
 					// add a corridor to the right
 					corridors.Add (new BSPCorridor( new Rect (lpoint.x, lpoint.y, Mathf.Abs (w) + 1, corridorSize)));
 
@@ -152,7 +147,6 @@ namespace DataStructure {
 						corridors.Add (new BSPCorridor(new Rect (rpoint.x, lpoint.y, corridorSize, -Mathf.Abs (h))));
 					}
 
-				//如果先 往上下走的話
 				} else {
 					// go up or down
 					if (h < 0) {
@@ -175,9 +169,8 @@ namespace DataStructure {
 				}
 			}
 
-			Debug.Log ("Corridors: ");
 			foreach (BSPCorridor corridor in corridors) {
-				Debug.Log ("corridor: " + corridor.spaceRect);
+				//Debug.Log ("corridor: " + corridor.spaceRect);
 			}
 		}
 

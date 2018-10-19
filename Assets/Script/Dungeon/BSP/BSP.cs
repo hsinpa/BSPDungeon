@@ -5,7 +5,7 @@ using DataStructure;
 
 namespace PG {
 	public class BSP : MonoBehaviour {
-		private float _width, _height;
+		private int _width, _height;
 		private List<TreeNode> _treeNodes = new List<TreeNode>();
 		private List<BSPMapComponent> _treeComponents = new List<BSPMapComponent>();
 
@@ -16,10 +16,9 @@ namespace PG {
 			GenerateMap(5);
 		}
 
-		public void SetUp(float p_width, float p_height) {
+		public void SetUp(int p_width, int p_height) {
 			_width = p_width;
 			_height = p_height;
-
 		}
 
 		public void GenerateMap(int p_iteration) {
@@ -55,7 +54,7 @@ namespace PG {
 					}
 					else if (node.GetType() == typeof(BSPCorridor)) {
 						Gizmos.color = Color.green;
-						// Gizmos.DrawWireCube(node.spaceRect.center, node.spaceRect.size);
+						Gizmos.DrawWireCube(node.spaceRect.center, node.spaceRect.size);
 					}
 				}
 			}

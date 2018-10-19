@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DataStructure;
 
 namespace PG {
 	public class BSPRoom : BSPMapComponent {
@@ -9,7 +10,9 @@ namespace PG {
 			//Calculate roomRect
 			spaceRect = CalculateRoomRect(p_holderRect);
 			display_order = 1;
-		}
+            new GridHolder(spaceRect, 10);
+
+        }
 
 		public Rect CalculateRoomRect(Rect p_holderRect) {
 			Vector2 roomPosition = new Vector2(
@@ -27,7 +30,20 @@ namespace PG {
 			);
 			return new Rect(roomPosition, size);
 		}
-		
+
+        public class GridHolder {
+            DataStructure.Grid[][] grids;
+
+            public GridHolder(Rect roomSize, int p_grid_size)
+            {
+                float xLine = roomSize.width / p_grid_size;
+                float yLine = roomSize.height / p_grid_size;
+                Debug.Log("roomSize.width " + roomSize.width + ", roomSize.height " + roomSize.height);
+
+                Debug.Log("Xline "+ xLine + ", yLine " + yLine);
+
+            }
+        }
 		
 	}
 }

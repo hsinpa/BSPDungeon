@@ -9,8 +9,8 @@ namespace DataStructure
 
         public List<TreeNode> all_room_parent = new List<TreeNode>();
 
-        public TreeMap(Vector2 p_center, float p_radius_x, float p_radius_y) {
-            Vector2 position = new Vector2( p_center.x - p_radius_x,  p_center.y - p_radius_y );
+        public TreeMap(Vector2 p_center, int p_radius_x, int p_radius_y) {
+            Vector2 position = new Vector2( (p_center.x - p_radius_x), (p_center.y - p_radius_y) );
             Rect rect = new Rect(position, new Vector2(p_radius_x * 2, p_radius_y * 2) );
 
             rootNode = new TreeNode(rect, null);
