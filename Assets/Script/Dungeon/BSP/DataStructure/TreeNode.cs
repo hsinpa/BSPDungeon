@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 using PG;
+using Utility;
 
 namespace DataStructure {
 	public class TreeNode {
@@ -19,8 +20,9 @@ namespace DataStructure {
 
 		public BSPRoom room;
 		public List<BSPCorridor> corridors = new List<BSPCorridor>();
+        public List<BSPCorridor> tempCorridors = new List<BSPCorridor>();
 
-		private float AllowRatioDifference = 1.7f;
+        private float AllowRatioDifference = 1.7f;
 
 		public TreeNode(Rect p_rect, TreeNode p_parent) {
 			rect = p_rect;
@@ -74,7 +76,7 @@ namespace DataStructure {
 			if (throwDice == 0) {
 				if (rect.width  / rect.height  > AllowRatioDifference ) return GetDivideRoomSize();
 
-				float randomY = Random.Range( rect.height * 0.4f, rect.height * 0.6f );
+				float randomY = UtilityMethod.RandRangeToInt( rect.height * 0.4f, rect.height * 0.6f );
 
 				rooms[0] = new Rect(rect.x, rect.y, rect.width, randomY);
 				rooms[1] = new Rect(rect.x, rect.y + randomY, rect.width, rect.height - randomY);
@@ -82,7 +84,7 @@ namespace DataStructure {
 			} else {
 				if (rect.height  / rect.width  > AllowRatioDifference ) return GetDivideRoomSize();
 
-				float randomX = Random.Range( rect.width * 0.4f, rect.width*0.6f);
+				float randomX = UtilityMethod.RandRangeToInt( rect.width * 0.4f, rect.width*0.6f);
 
 				rooms[0] = new Rect(rect.x, rect.y, randomX, rect.height);
 				rooms[1] = new Rect(rect.x + randomX, rect.y, rect.width - randomX, rect.height);
@@ -109,16 +111,21 @@ namespace DataStructure {
 		}
 
 		private void LinkCorridorBetween(BSPRoom left, BSPRoom right) {
-			Rect lroom = left.spaceRect;
+            tempCorridors.Clear();
+
+            Rect lroom = left.spaceRect;
 			Rect rroom = right.spaceRect;
 
 			// Debug.Log("Creating corridor(s) between " + left.debugId + "(" + lroom + ") and " + right.debugId + " (" + rroom + ")");
 
 			// attach the corridor to a random point in each room
-			Vector2 lpoint = new Vector2 (Mathf.FloorToInt(Random.Range (lroom.x + 1, lroom.xMax - 1)), 
-											Mathf.FloorToInt(Random.Range (lroom.y + 1, lroom.yMax - 1)));
-			Vector2 rpoint = new Vector2 (Mathf.FloorToInt(Random.Range (rroom.x + 1, rroom.xMax - 1)),
-											 Mathf.FloorToInt(Random.Range (rroom.y + 1, rroom.yMax - 1)));
+			Vector2 lpoint = new Vector2 (UtilityMethod.RandRangeToInt(lroom.x + 1, lroom.xMax - 1),
+                                            UtilityMethod.RandRangeToInt(lroom.y + 1, lroom.yMax - 1));
+			Vector2 rpoint = new Vector2 (UtilityMethod.RandRangeToInt(rroom.x + 1, rroom.xMax - 1),
+                                             UtilityMethod.RandRangeToInt(rroom.y + 1, rroom.yMax - 1));
+
+
+
 
             //Debug.Log("lPoint " + lpoint +", rPoint " + rpoint);
 			// always be sure that left point is on the left to simplify the code
@@ -130,46 +137,51 @@ namespace DataStructure {
 
 			int w = (int)(lpoint.x - rpoint.x);
 			int h = (int)(lpoint.y - rpoint.y);
-			int corridorSize = 50;
+			int corridorSize = 1;
 
 			// if the points are not aligned horizontally
 			if (w != 0) {
 				// choose at random to go horizontal then vertical or the opposite
 				if (Random.Range (0, 1) > 2) {
-					// add a corridor to the right
-					corridors.Add (new BSPCorridor( new Rect (lpoint.x, lpoint.y, Mathf.Abs (w) + 1, corridorSize)));
+                    // add a corridor to the right
+                    tempCorridors.Add (new BSPCorridor( new Rect (lpoint.x, lpoint.y, Mathf.Abs (w) + 1, corridorSize)));
 
 					// if left point is below right point go up
 					// otherwise go down
 					if (h < 0) {
-						corridors.Add (new BSPCorridor(new Rect (rpoint.x, lpoint.y, corridorSize, Mathf.Abs (h))));
+                        tempCorridors.Add (new BSPCorridor(new Rect (rpoint.x, lpoint.y, corridorSize, Mathf.Abs (h))));
 					} else {
-						corridors.Add (new BSPCorridor(new Rect (rpoint.x, lpoint.y, corridorSize, -Mathf.Abs (h))));
+                        tempCorridors.Add (new BSPCorridor(new Rect (rpoint.x, lpoint.y, corridorSize, -Mathf.Abs (h))));
 					}
 
 				} else {
 					// go up or down
 					if (h < 0) {
-						corridors.Add (new BSPCorridor(new Rect (lpoint.x, lpoint.y, corridorSize, Mathf.Abs (h))));
+                        tempCorridors.Add (new BSPCorridor(new Rect (lpoint.x, lpoint.y, corridorSize, Mathf.Abs (h))));
 					} else {
-						corridors.Add (new BSPCorridor(new Rect (lpoint.x, rpoint.y, corridorSize, Mathf.Abs (h))));
+                        tempCorridors.Add (new BSPCorridor(new Rect (lpoint.x, rpoint.y, corridorSize, Mathf.Abs (h))));
 					}
 
-					// then go right
-					corridors.Add (new BSPCorridor(new Rect (lpoint.x, rpoint.y, Mathf.Abs (w) + 1, corridorSize)));
+                    // then go right
+                    tempCorridors.Add (new BSPCorridor(new Rect (lpoint.x, rpoint.y, Mathf.Abs (w) + 1, corridorSize)));
 				}
 			} else {
 
 				//假設 房間的x軸對齊的話
 				//根據y軸的差距 決定往下 或 往上走
 				if (h < 0) {
-				corridors.Add (new BSPCorridor(new Rect ((int)lpoint.x, (int)lpoint.y, corridorSize, Mathf.Abs (h))));
+                    tempCorridors.Add (new BSPCorridor(new Rect ((int)lpoint.x, (int)lpoint.y, corridorSize, Mathf.Abs (h))));
 				} else {
-				corridors.Add (new BSPCorridor(new Rect ((int)rpoint.x, (int)rpoint.y, corridorSize, Mathf.Abs (h))));
+                    tempCorridors.Add (new BSPCorridor(new Rect ((int)rpoint.x, (int)rpoint.y, corridorSize, Mathf.Abs (h))));
 				}
 			}
 
-			foreach (BSPCorridor corridor in corridors) {
+            corridors.AddRange(tempCorridors);
+
+            left.FindDoorIntersection(tempCorridors, corridorSize);
+            right.FindDoorIntersection(tempCorridors, corridorSize);
+
+            foreach (BSPCorridor corridor in corridors) {
 				//Debug.Log ("corridor: " + corridor.spaceRect);
 			}
 		}

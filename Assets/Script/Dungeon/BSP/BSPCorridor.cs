@@ -8,6 +8,6 @@ namespace PG {
 			//Calculate roomRect
 			spaceRect = p_holderRect;
 			display_order = 0;
-		}
+        }
 	}
 }

@@ -9,11 +9,19 @@ namespace PG {
 		private List<TreeNode> _treeNodes = new List<TreeNode>();
 		private List<BSPMapComponent> _treeComponents = new List<BSPMapComponent>();
 
+        public System.Action<Vector2Int, List<BSPMapComponent>> OnMapBuild;
+
 		private TreeMap _treeMap;
 
+        [SerializeField]
+        private Vector2Int dungeonSize;
+
+        [SerializeField, Range(1, 10)]
+        private int bspIteration;
+
 		void Start() {
-			SetUp(1000, 1000);
-			GenerateMap(5);
+			SetUp(dungeonSize.x, dungeonSize.y);
+			GenerateMap(bspIteration);
 		}
 
 		public void SetUp(int p_width, int p_height) {
@@ -32,7 +40,10 @@ namespace PG {
 			_treeMap.GenerateCorridor();
 
 			_treeComponents = GetAllMapComponent();
-		}
+            if (OnMapBuild != null)
+                OnMapBuild(dungeonSize, _treeComponents);
+
+        }
 
 		void OnDrawGizmos()
 		{

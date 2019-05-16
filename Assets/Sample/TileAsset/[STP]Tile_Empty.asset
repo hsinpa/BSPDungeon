@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734bdbedc6ea9704f80c5c1af0409702, type: 3}
+  m_Name: '[STP]Tile_Empty'
+  m_EditorClassIdentifier: 
+  _tag: 0
+  sprites:
+  - {fileID: 21300002, guid: af12a94bf58e8c44bae872b2ae4cce55, type: 3}
