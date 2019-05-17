@@ -40,6 +40,8 @@ namespace PG {
 			_treeMap.GenerateCorridor();
 
 			_treeComponents = GetAllMapComponent();
+            FindDoors(_treeComponents);
+
             if (OnMapBuild != null)
                 OnMapBuild(dungeonSize, _treeComponents);
 
@@ -97,5 +99,15 @@ namespace PG {
 			return mapComps;
 		}
 
-	}
+        private void FindDoors(List<BSPMapComponent> p_components) {
+            var corridors = p_components.FindAll(x => x.GetType() == typeof(BSPCorridor));
+            var rooms = p_components.FindAll(x => x.GetType() == typeof(BSPRoom));
+
+            for (int r = 0; r < rooms.Count; r++) {
+                BSPRoom room = (BSPRoom)rooms[r];
+                room.FindDoorIntersection(corridors, 1);
+            }
+        }
+
+    }
 }

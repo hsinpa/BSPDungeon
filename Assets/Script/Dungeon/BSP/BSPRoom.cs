@@ -19,7 +19,7 @@ namespace PG {
 
         }
 
-        public void FindDoorIntersection(List<BSPCorridor> corridors, int corridorSize) {
+        public void FindDoorIntersection(List<BSPMapComponent> corridors, int corridorSize) {
             foreach (BSPCorridor corridor in corridors) {
 
                 if (corridor.spaceRect.xMin > this.spaceRect.xMin && corridor.spaceRect.xMax < this.spaceRect.xMax &&
@@ -30,9 +30,21 @@ namespace PG {
 
                 }
 
+                if (!UtilityMethod.DoBoxesIntersect(this.spaceRect, corridor.spaceRect)) {
+                    continue;
+                }
+
+
                 //Horizontal
                 if (corridor.spaceRect.width != corridorSize) {
                     int y = (int)corridor.spaceRect.y;
+
+                    if (corridor.spaceRect.xMin < this.spaceRect.xMin) {
+                        doorPosition.Add(new Vector2Int((int)this.spaceRect.xMax, y));
+                        doorPosition.Add(new Vector2Int((int)this.spaceRect.xMin - 1, y));
+
+                        continue;
+                    }
 
                     //Door at xMax side (right)
                     if (corridor.spaceRect.xMin < this.spaceRect.xMax && corridor.spaceRect.xMin > this.spaceRect.xMin)
@@ -45,9 +57,16 @@ namespace PG {
                     }
 
                 } else {
-
                     //Door at yMax side (up)
                     int x = (int)corridor.spaceRect.x;
+
+                    if (corridor.spaceRect.yMin < this.spaceRect.yMin)
+                    {
+                        doorPosition.Add(new Vector2Int(x, (int)this.spaceRect.yMax));
+                        doorPosition.Add(new Vector2Int(x, (int)this.spaceRect.yMin - 1));
+
+                        continue;
+                    }
 
                     if (corridor.spaceRect.yMin < this.spaceRect.yMax && corridor.spaceRect.yMin > this.spaceRect.yMin)
                     {

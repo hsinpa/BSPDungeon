@@ -22,7 +22,7 @@ namespace DataStructure {
 		public List<BSPCorridor> corridors = new List<BSPCorridor>();
         public List<BSPCorridor> tempCorridors = new List<BSPCorridor>();
 
-        private float AllowRatioDifference = 1.7f;
+        private float AllowRatioDifference = 1.4f;
 
 		public TreeNode(Rect p_rect, TreeNode p_parent) {
 			rect = p_rect;
@@ -178,8 +178,8 @@ namespace DataStructure {
 
             corridors.AddRange(tempCorridors);
 
-            left.FindDoorIntersection(tempCorridors, corridorSize);
-            right.FindDoorIntersection(tempCorridors, corridorSize);
+            //left.FindDoorIntersection(tempCorridors, corridorSize);
+            //right.FindDoorIntersection(tempCorridors, corridorSize);
 
             foreach (BSPCorridor corridor in corridors) {
 				//Debug.Log ("corridor: " + corridor.spaceRect);

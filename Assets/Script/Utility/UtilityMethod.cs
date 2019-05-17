@@ -100,5 +100,13 @@ namespace Utility {
         public static int RandRangeToInt(float f1, float f2) {
             return Random.Range(Mathf.RoundToInt(f1), Mathf.RoundToInt(f2) + 1);
         }
-	}
+
+
+        public static bool DoBoxesIntersect(Rect a, Rect b)
+        {
+            return (Mathf.Abs(a.center.x - b.center.x) * 2 < (a.width + b.width)) &&
+                   (Mathf.Abs(a.center.y - b.center.y) * 2 < (a.height + b.height));
+        }
+
+    }
 }
