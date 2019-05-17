@@ -19,7 +19,7 @@ public class TileRoughRender : MonoBehaviour
 
     string[,] mapData;
 
-    private void Start()
+    private void Awake()
     {
         bspMap = this.GetComponent<BSP>();
 
@@ -47,17 +47,21 @@ public class TileRoughRender : MonoBehaviour
                     int yIndex = Mathf.RoundToInt(dungeonSize.y + y);
                     mapData[xIndex, yIndex] = "0";
 
-                    if (bspComponents[i].GetType() == typeof(BSPRoom)) {
+                    if (bspComponents[i].GetType() == typeof(BSPRoom))
+                    {
                         BSPRoom room = (BSPRoom)bspComponents[i];
-                        for (int d = 0; d < room.doorPosition.Count; d++) {
-                            Debug.Log(room.doorPosition[d].x +", "+ room.doorPosition[d].y);
-                            mapData[room.doorPosition[d].x, room.doorPosition[d].y] = "0";
+                        for (int d = 0; d < room.doorPosition.Count; d++)
+                        {
+                            Vector2Int offsetPos = room.doorPosition[d] + new Vector2Int(24, 24);
+                            //Debug.Log(offsetPos.x +", "+ offsetPos.y);
+                            mapData[offsetPos.x, offsetPos.y] = "1";
                         }
                     }
                 }
             }
         }
 
+        Debug.Log(dungeonFullSize);
         RenderToWorldCanvas(map_offset, dungeonFullSize, mapData);
     }
 
